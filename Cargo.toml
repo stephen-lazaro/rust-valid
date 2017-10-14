@@ -1,0 +1,8 @@
+[package]
+name = "valid"
+version = "0.1.0"
+authors = ["Stephen Lazaro <stephen@earnest.com>"]
+
+[dependencies]
+either = "1.0"
+quickcheck = "0.3"
