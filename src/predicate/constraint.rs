@@ -3,7 +3,7 @@ use std::marker::PhantomData;
 
 type Predicate <A> = fn(A) -> bool;
 
-struct Constraint <F, R, E>
+pub struct Constraint <F, R, E>
   where F: Fn(R) -> bool
 {
   run: F, 
@@ -18,14 +18,13 @@ pub fn contramap <'a, F, P, B, A> (f: F, pred: P) -> impl Fn(B) -> bool
     generic::compose(pred, f)
 }
 
-pub fn contramapConstraint <'a, R, E, S, F, G, H> (f: H, constraint: Constraint <F, R, E>) -> Constraint <G, S, E> 
+pub fn contramapConstraint <'a, R: 'a, E, S: 'a, F, G, H> (f: H, constraint: Constraint <F, R, E>) -> Constraint <impl Fn(S) -> bool + 'a, S, E> 
     where F: Fn(R) -> bool + 'a,
-          G: Fn(S) -> bool + 'a,
           H: Fn(S) -> R + 'a
 {
     let composed = contramap(f, constraint.run);
     Constraint {
-        run: |x| composed(x),
+        run: composed,
         failure: constraint.failure,
         witness: PhantomData
     }
