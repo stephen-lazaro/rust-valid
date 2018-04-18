@@ -14,6 +14,11 @@ mod tests {
     use boolean::expression::or;
     use boolean::expression::and;
     use boolean::expression::context;
+    use predicate::generic::compose;
+    use predicate::constraint::Constraint;
+    use predicate::constraint::contramap;
+    use predicate::constraint::contramap_constraint;
+    use std::marker::PhantomData;
 
     quickcheck! {
         fn cata_works_pure(str: String) -> bool {
@@ -78,5 +83,39 @@ mod tests {
                     )
                 ) == format!("({}) of [{}]", str, str_)
         }
+    }
+
+    #[test]
+    fn composition_works () {
+        let times_two = |x: i32| x * 2;
+        let add_five = |y: i32| y + 5;
+
+        let composed = compose(add_five, times_two);
+        assert!(composed(5) == 15)
+    }
+
+    #[test]
+    fn composition_works_2 () {
+        let times_fifty_five = |x: i32| x * 55;
+        let add_seven = |y: i32| y + 7;
+
+        let composed = compose(add_seven, times_fifty_five);
+        assert!(composed(1) == 62)
+    }
+
+    #[test]
+    fn contramap_constraint_test () {
+        let constraint = Constraint {
+            run: |x: i32| x == 0,
+            failure: "oh no",
+            witness: PhantomData
+        };
+        let change = |x: i32| x - 1;
+        assert!(
+            contramap_constraint(
+                change,
+                constraint
+            ).run(1)
+        )
     }
 }

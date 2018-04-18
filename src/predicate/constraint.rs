@@ -6,9 +6,18 @@ type Predicate <A> = fn(A) -> bool;
 pub struct Constraint <F, R, E>
   where F: Fn(R) -> bool
 {
-  run: F, 
-  failure: E,
-  witness: PhantomData<R>
+  pub run: F, 
+  pub failure: E,
+  pub witness: PhantomData<R>
+}
+
+impl<F, R, E> Constraint <F, R, E>
+  where F: Fn(R) -> bool
+{
+    pub fn run(self, r: R) -> bool {
+        let relevant = self.run;
+        relevant(r)
+    }
 }
 
 pub fn contramap <'a, F, P, B, A> (f: F, pred: P) -> impl Fn(B) -> bool
@@ -18,7 +27,7 @@ pub fn contramap <'a, F, P, B, A> (f: F, pred: P) -> impl Fn(B) -> bool
     generic::compose(pred, f)
 }
 
-pub fn contramapConstraint <'a, R: 'a, E, S: 'a, F, G, H> (f: H, constraint: Constraint <F, R, E>) -> Constraint <impl Fn(S) -> bool + 'a, S, E> 
+pub fn contramap_constraint <'a, R: 'a, E, S: 'a, F, H> (f: H, constraint: Constraint <F, R, E>) -> Constraint <impl Fn(S) -> bool + 'a, S, E> 
     where F: Fn(R) -> bool + 'a,
           H: Fn(S) -> R + 'a
 {
