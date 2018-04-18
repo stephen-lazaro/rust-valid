@@ -11,16 +11,21 @@ struct Constraint <F, R, E>
   witness: PhantomData<R>
 }
 
-pub fn contramap <B, A> (f: fn(B) -> A, pred: Predicate <A>) -> impl Fn(B) -> bool {
+pub fn contramap <'a, F, P, B, A> (f: F, pred: P) -> impl Fn(B) -> bool
+  where F: Fn(B) -> A + 'a,
+        P: Fn(A) -> bool + 'a
+{
     generic::compose(pred, f)
 }
 
-pub fn contramapConstraint <R, E, S, F, G> (f: fn(S) -> R, constraint: Constraint <F, R, E>) -> Constraint <G, S, E> 
-    where F: Fn(R) -> bool,
-          G: Fn(S) -> bool
+pub fn contramapConstraint <'a, R, E, S, F, G, H> (f: H, constraint: Constraint <F, R, E>) -> Constraint <G, S, E> 
+    where F: Fn(R) -> bool + 'a,
+          G: Fn(S) -> bool + 'a,
+          H: Fn(S) -> R + 'a
 {
+    let composed = contramap(f, constraint.run);
     Constraint {
-        run: |x| constraint.run(f(x)),
+        run: |x| composed(x),
         failure: constraint.failure,
         witness: PhantomData
     }

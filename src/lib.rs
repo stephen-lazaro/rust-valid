@@ -4,6 +4,7 @@
 extern crate quickcheck;
 
 mod boolean;
+mod predicate;
 
 #[cfg(test)]
 mod tests {
