@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 use predicate::generic;
 use std::marker::PhantomData;
 

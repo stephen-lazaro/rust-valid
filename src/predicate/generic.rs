@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 pub fn compose<'a, A, B, C, G, F>(f: F, g: G) -> impl Fn(A) -> C
     where
         F: Fn(B) -> C + 'a,
