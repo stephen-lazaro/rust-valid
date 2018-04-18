@@ -4,19 +4,16 @@ matrix:
       rust: beta
       script:
         - cargo build --verbose
-        - cargo run
         - cargo test --verbose
     - language: rust
       rust: nightly
       script:
         - cargo build --verbose
-        - cargo run
         - cargo test --verbose
     - language: rust
       rust: stable
       script:
         - cargo build --verbose
-        - cargo run
         - cargo test --verbose
   allow_failures:
     - rust: beta
