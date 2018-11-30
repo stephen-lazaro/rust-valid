@@ -5,6 +5,7 @@ extern crate quickcheck;
 
 mod boolean;
 mod predicate;
+mod model;
 
 #[cfg(test)]
 mod tests {
@@ -25,7 +26,7 @@ mod tests {
             cata(of(str.clone())) == str
         }
     }
-    
+
     quickcheck! {
         fn cata_works_not_simple(str: String) -> bool {
             cata(
@@ -45,7 +46,7 @@ mod tests {
                 or(
                     of(
                         str.clone())
-                    , 
+                    ,
                     of(
                         str_.clone()
                         )
@@ -61,7 +62,7 @@ mod tests {
                 and(
                     of(
                         str.clone())
-                    , 
+                    ,
                     of(
                         str_.clone()
                         )
@@ -76,7 +77,7 @@ mod tests {
             cata(
                 context(
                     str.clone()
-                    , 
+                    ,
                     of(
                         str_.clone()
                         )
