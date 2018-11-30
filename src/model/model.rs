@@ -24,6 +24,10 @@ trait Modeled<V, R, E: ToString + Debug> {
             Err(e) => Err(e.to_string())
         }
     }
+
+    fn preview(&self, r: R) -> Option<V> {
+        self.apply(r).ok()
+    }
 }
 
 
