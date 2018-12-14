@@ -7,6 +7,8 @@ mod boolean;
 mod predicate;
 mod model;
 
+#[allow(dead_code)]
+pub type Validation<V, R, E> = boolean::expression::Expression<predicate::constraint::Constraint<V, R, E>>;
 
 #[cfg(test)]
 mod tests {
@@ -16,6 +18,7 @@ mod tests {
     use boolean::expression::or;
     use boolean::expression::and;
     use boolean::expression::context;
+    #[allow(unused_imports)]
     use boolean::expression::Expression;
     use predicate::generic::compose;
     use predicate::constraint::Constraint;
@@ -24,8 +27,6 @@ mod tests {
     use predicate::constraint::contramap_constraint;
     use std::marker::PhantomData;
 
-    #[allow(dead_code)]
-    type Validation<V, R, E> = Expression<Constraint<V, R, E>>;
 
     quickcheck! {
         fn cata_works_pure(str: String) -> bool {

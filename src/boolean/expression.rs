@@ -47,3 +47,16 @@ pub fn cata (x: Expression <String>) -> String {
         Expression::Context (ctx, rem) => format!("({}) of [{}]", ctx, cata (*rem))
     }
 }
+
+#[allow(dead_code)]
+pub fn catax <A, F>(x: Expression <A>, f: F) -> String
+  where F: Fn(A) -> String,
+        F: Clone {
+    match x {
+        Expression::Pure (x) => f(x),
+        Expression::Not (negated) => format!("Not ({})", catax (*negated, f)),
+        Expression::And (left, right) => format!("({}) and ({})", catax (*left, f.clone()), catax (*right, f)),
+        Expression::Or (left, right) => format!("({}) or ({})", catax (*left, f.clone()), catax (*right, f)),
+        Expression::Context (ctx, rem) => format!("({}) of [{}]", ctx, catax (*rem, f))
+    }
+}
