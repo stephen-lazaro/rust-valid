@@ -1,4 +1,4 @@
-#![feature(conservative_impl_trait)]
+#![feature(associated_type_defaults)]
 #[allow(unused_imports)]
 #[macro_use]
 extern crate quickcheck;
@@ -6,6 +6,7 @@ extern crate quickcheck;
 mod boolean;
 mod predicate;
 mod model;
+
 
 #[cfg(test)]
 mod tests {
@@ -15,11 +16,16 @@ mod tests {
     use boolean::expression::or;
     use boolean::expression::and;
     use boolean::expression::context;
+    use boolean::expression::Expression;
     use predicate::generic::compose;
     use predicate::constraint::Constraint;
+    #[allow(unused_imports)]
     use predicate::constraint::contramap;
     use predicate::constraint::contramap_constraint;
     use std::marker::PhantomData;
+
+    #[allow(dead_code)]
+    type Validation<V, R, E> = Expression<Constraint<V, R, E>>;
 
     quickcheck! {
         fn cata_works_pure(str: String) -> bool {
